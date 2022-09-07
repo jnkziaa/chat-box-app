@@ -1,5 +1,5 @@
-import React from 'react';
-import {ChannelList, useChat} from "stream-chat-react";
+import React, {useState} from 'react';
+import {ChannelList, useChat, useChatContext} from "stream-chat-react";
 import Cookies from "universal-cookie/lib";
 import {ChannelSearch, TeamChannelList, TeamChannelPreview} from "./";
 import HospitalIcon from "../assets/hospital.png"
@@ -29,12 +29,25 @@ const SideBar = ( {logout} ) => {
 const CompanyHeader = () => {
     return(
         <div className="channel-list__header">
-            <p className="channel-list__header__text"> This is My ChatBox </p>
+            <p className="channel-list__header__text"> Anime Group Chat </p>
         </div>
     )
 }
 
-export function ChannelListContainer() {
+
+
+const customChannelTeamFilter = (channel) => {
+    return channel.filter((channel) => channel.type === "team");
+}
+
+const customChannelMessagingFilter = (channel) => {
+    return channel.filter((channel) => channel.type === "messaging");
+}
+
+
+
+const ChannelListContent = ({isCreating, setIsCreating, setCreateType, setIsEditing, setToggleContainer}) => {
+    const {client} = useChatContext();
     const logout = () => {
         cookies.remove("token");
         cookies.remove("useId");
@@ -47,6 +60,9 @@ export function ChannelListContainer() {
         window.location.reload();
 
     }
+
+    const filters = {members : {$in : [client.userID]}}
+
     return (
         <>
             <SideBar logout={logout}/>
@@ -54,13 +70,18 @@ export function ChannelListContainer() {
                 <CompanyHeader/>
                 <ChannelSearch/>
                 <ChannelList
-                    filters={{}}
-                    channelRenderFilterFn={() => {
-                    }}
+                    filters={filters}
+                    channelRenderFilterFn={customChannelTeamFilter
+                    }
                     List={(listProps) => (
                         <TeamChannelList
                             {...listProps}
                             type="team"
+                            isCreating={isCreating}
+                            setIsCreating={setIsCreating}
+                            setCreateType={setCreateType}
+                            setIsEditing={setIsEditing}
+                            setToggleContainer={setToggleContainer}
 
 
                         />
@@ -68,22 +89,30 @@ export function ChannelListContainer() {
                     }
                     Preview={(previewProps) => (
                         <TeamChannelPreview
-
                                 {... previewProps}
+                                setIsCreating={setIsCreating}
+                                setIsEditing={setIsEditing}
+                                setToggleContainer={setToggleContainer}
                                 type="team"
+
                            />
                     )}
 
                 />
 
                 <ChannelList
-                    filters={{}}
-                    channelRenderFilterFn={() => {
-                    }}
+                    filters={filters}
+                    channelRenderFilterFn={customChannelMessagingFilter
+                    }
                     List={(listProps) => (
                         <TeamChannelList
                             {...listProps}
                             type="messaging"
+                            isCreating={isCreating}
+                            setIsCreating={setIsCreating}
+                            setCreateType={setCreateType}
+                            setIsEditing={setIsEditing}
+                            setToggleContainer={setToggleContainer}
 
 
                         />
@@ -91,14 +120,43 @@ export function ChannelListContainer() {
                     }
                     Preview={(previewProps) => (
                         <TeamChannelPreview
-
                             {... previewProps}
+                            setIsCreating={setIsCreating}
+                            setIsEditing={setIsEditing}
+                            setToggleContainer={setToggleContainer}
                             type="messaging"
                         />
                     )}
 
                 />
 
+            </div>
+        </>
+    )
+}
+
+export function ChannelListContainer({setCreateType, setIsCreating, setIsEditing}){
+    const [toggleContainer, setToggleContainer] = useState(false);
+
+    return(
+        <>
+            <div className="channel-list__container">
+                <ChannelListContent
+                    setIsEditing={setIsEditing}
+                    setCreateType={setCreateType}
+                    setIsCreating={setIsCreating} />
+            </div>
+            <div className="channel-list__container-responsive" style={{
+                backgroundColor:"#005fff",
+                left: toggleContainer ? "0%" : "-89%"}}>
+                <div className="channerl-list__container-toggle" onClick={() => setToggleContainer(((
+                    prevToggleContainer) => !prevToggleContainer))}>
+                </div>
+                <ChannelListContent
+                    setIsEditing={setIsEditing}
+                    setCreateType={setCreateType}
+                    setIsCreating={setIsCreating}
+                    setToggleContainer={setToggleContainer} />
             </div>
         </>
     )

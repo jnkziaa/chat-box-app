@@ -8,3 +8,4 @@ export { TeamMessage } from "./TeamMessage";
 export { EditChannel } from "./EditChannel";
 export { CreateChannel } from "./CreateChannel";
 export { ChannelInner } from "./ChannelInner";
+export { UserList } from "./UserList";

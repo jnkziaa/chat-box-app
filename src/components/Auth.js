@@ -1,4 +1,4 @@
-import React , {useState}from 'react';
+import React, {useState} from 'react';
 import Cookies from "universal-cookie/es6";
 import axios from "axios";
 
@@ -7,9 +7,9 @@ import signinImage from "../assets/signup.jpg";
 const cookies = new Cookies();
 
 const initialState = { //basically an empty constructor for the initialState
-    fullName:" ",
-    username:" ",
-    password:" ",
+    fullName: " ",
+    username: " ",
+    password: " ",
     confirmPassword: " ",
     phoneNumber: " ",
     avatarURL: " ",
@@ -21,17 +21,17 @@ export function Auth() {
     const [isSignUp, setIsSignUp] = useState(true); //sign up page for true, sign in page for false
 
     const handleChange = (e) => {
-        setForm({... form, [e.target.name] : e.target.value}); //updates the statefield
+        setForm({...form, [e.target.name]: e.target.value}); //updates the statefield
     };
 
-    const handleSubmit = async (e) =>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const {fullName, username, password, phoneNumber, avatarURL} = form;
         const URL = "http://localhost:5000/auth";
 
 
-        const { data: { token, userId, hashedPassword} } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
+        const {data: {token, userId, hashedPassword}} = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
             username, password, fullName, phoneNumber, avatarURL,
         });
 
@@ -42,7 +42,7 @@ export function Auth() {
         cookies.set("fullName", fullName);
         cookies.set("userId", userId);
 
-        if(isSignUp){
+        if (isSignUp) {
             cookies.set("phoneNumber", phoneNumber)
             cookies.set("avatarURL", avatarURL)
             cookies.set("hashedPassword", hashedPassword)
@@ -73,16 +73,16 @@ export function Auth() {
                             </div>
                         )}
 
-                            <div className="auth__form-container_fields-content_input">
+                        <div className="auth__form-container_fields-content_input">
                             <label htmlFor="username"> Username</label>
                             <input
-                            name="username"
-                            type="text"
-                            placeholder="Username"
-                            onChange={handleChange}
-                            required={true}
+                                name="username"
+                                type="text"
+                                placeholder="Username"
+                                onChange={handleChange}
+                                required={true}
                             />
-                            </div>
+                        </div>
 
                         {isSignUp && (
                             <div className="auth__form-container_fields-content_input">
@@ -108,16 +108,16 @@ export function Auth() {
                                 />
                             </div>
                         )}
-                            <div className="auth__form-container_fields-content_input">
-                                <label htmlFor="password">Password</label>
-                                <input
-                                    name="password"
-                                    type="password"
-                                    placeholder="Password"
-                                    onChange={handleChange}
-                                    required={true}
-                                />
-                            </div>
+                        <div className="auth__form-container_fields-content_input">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                name="password"
+                                type="password"
+                                placeholder="Password"
+                                onChange={handleChange}
+                                required={true}
+                            />
+                        </div>
 
                         {isSignUp && (
                             <div className="auth__form-container_fields-content_input">
@@ -150,7 +150,7 @@ export function Auth() {
 
             </div>
             <div className="auth__form-container_image">
-                <img src={signinImage} alt=" sign in " />
+                <img src={signinImage} alt=" sign in "/>
             </div>
         </div>
     );
