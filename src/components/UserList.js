@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Avatar, useChatContext } from "stream-chat-react";
 import {InviteIcon} from "../assets";
 import {cleanup} from "@testing-library/react";
+import {calculateNewValue} from "@testing-library/user-event/dist/utils";
 
 const ListContainer = ({children}) => {
     return(
@@ -16,13 +17,15 @@ const ListContainer = ({children}) => {
     )
 }
 
-const UserItem = ({user, setSelectedUsers}) =>{
+const UserItem = ({user, setSelectedUsers, setActualName}) =>{
     const [selected, setSelected] = useState(false);
     const handleSelect = () => {
         if(selected){
             setSelectedUsers((prevUsers) => prevUsers.filter((prevUsers) => prevUsers !== user.id));  //keep selected users, removing the ones we clicked right now
+            setActualName((prevUsers) => prevUsers.filter((prevUsers) => prevUsers !== user.fullName));
         }else{
             setSelectedUsers((prevUsers) => [... prevUsers, user.id]);
+            setActualName((prevUsers) => [... prevUsers, user.fullName]);
         }
         setSelected((prevSelected) => !prevSelected)
     }
@@ -37,7 +40,7 @@ const UserItem = ({user, setSelectedUsers}) =>{
     )
 }
 
-export function UserList({setSelectedUsers}) {
+export function UserList({setSelectedUsers, setActualName}) {
     const { client } = useChatContext();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -97,9 +100,10 @@ export function UserList({setSelectedUsers}) {
                 Loading users...
             </div> : (
                 users?.map((user, i) =>(
-                    <UserItem index={i} key={user.id} user={user}  setSelectedUsers={setSelectedUsers}/>
+                    <UserItem index={i} key={user.id} user={user}  setSelectedUsers={setSelectedUsers} setActualName={setActualName} />
                 ))
             )}
+
         </ListContainer>
     );
 }

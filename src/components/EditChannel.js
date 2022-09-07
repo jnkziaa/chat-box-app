@@ -26,6 +26,7 @@ export function EditChannel({setIsEditing}) {
     const {channel} = useChatContext();
     const [channelName, setChannelName] = useState(channel?.data?.name);
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const [actualName, setActualName] = useState([]);
 
 
     const updateChannel = async (event) => {
@@ -44,7 +45,7 @@ export function EditChannel({setIsEditing}) {
 
             await channel.addMembers(selectedUsers);
             //console.log(selectedUsers.data.name);
-            await channel.sendMessage({text: `${selectedUsers} has joined the crew`});
+            await channel.sendMessage({text: `${actualName} has joined the crew`});
         }
         //console.log(selectedUsers.data.name)
         setChannelName(null);
@@ -59,7 +60,7 @@ export function EditChannel({setIsEditing}) {
                 <CloseCreateChannel setIsEditing={setIsEditing} />
             </div>
             <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />
-            <UserList setSelectedUsers={setSelectedUsers} />
+            <UserList setSelectedUsers={setSelectedUsers} setActualName={setActualName} />
             <div className="edit-channel__button-wrapper" onClick={updateChannel}>
                 <p> Save Changes </p>
             </div>
