@@ -11,6 +11,8 @@ export function TeamChannelPreview ({setActiveChannel, setIsCreating, setIsEditi
 
     const DirectPreview = () => {
         const members = Object.values(channel.state.members).filter(({user }) => user.id !== client.userID);
+
+
         return (
             <div className="channel-preview__item single">
                 <Avatar
@@ -18,7 +20,7 @@ export function TeamChannelPreview ({setActiveChannel, setIsCreating, setIsEditi
                     name={members[0]?.user?.fullName}
                     size={24}
                     />
-                <p>{members[0]?.user?.fullName}</p>
+                <p>{members[0]?.user?.fullName || members[0]?.us?.id}</p>
             </div>
         )
     }
